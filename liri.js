@@ -4,7 +4,8 @@
 	// Setup Variables 
 	// =====================================================================================
 
-		// // NPM package for reading and writing files
+		// NPM packages
+		var Twitter = require('twitter');
 		var fs = require('fs');
 
 		// API keys file 
@@ -22,6 +23,37 @@
 	// =====================================================================================
 
 		var myTweets = function() {
+
+			var client = new Twitter({
+			  consumer_key: twitterCK,
+			  consumer_secret: twitterCS,
+			  access_token_key: twitterATK,
+			  access_token_secret: twitterATS
+			});
+
+			client.get('statuses/user_timeline', function(error, tweets, response) {
+
+  				if(error) throw error;
+
+  				// Find amount of tweets in timeline
+  				var twitterLength = tweets.length;
+
+  				// If timeline has more than 20 tweets, limit length to last 20 tweets
+  				if (twitterLength > 20) {
+  					twitterLength = 20;
+  				}
+
+  				// Log tweet data and tweet
+  				for (var i = 0; i<twitterLength; i++) {
+  					var currentTweet = tweets[i];  		
+	  				console.log(" ");
+	  				console.log("Tweeted at: " + currentTweet.created_at);
+	  				console.log("Tweet: " + currentTweet.text);
+	  				console.log(" ");		
+	  				console.log("--------------------------------------------------------------");	
+  				}
+
+			});
 
 		};
 
