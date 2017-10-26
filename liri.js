@@ -6,14 +6,25 @@
 
 		// NPM packages
 		var Twitter = require('twitter');
+		var Spotify = require('node-spotify-api');
 		var fs = require('fs');
 
 		// API keys file 
 		var keys = require("./keys.js");
-		var twitterCK = keys.consumer_key;
-		var twitterCS = keys.consumer_secret;
-		var twitterATK = keys.access_token_key;
-		var twitterATS = keys.access_token_secret;
+
+		// Twitter API Access
+		var twitterClient = new Twitter({
+		  consumer_key: keys.twitterKeys.consumer_key,
+		  consumer_secret: keys.twitterKeys.consumer_secret,
+		  access_token_key: keys.twitterKeys.access_token_key,
+		  access_token_secret: keys.twitterKeys.access_token_secret
+		});
+
+		// Spotify API Access
+		var spotifyClient = new Spotify({
+			id: keys.spotifyKeys.client_id,
+			secret: keys.spotifyKeys.client_secret
+		});
 
 		// Command line argument
 		var liriCommand = process.argv[2];
@@ -24,16 +35,11 @@
 
 		var myTweets = function() {
 
-			var client = new Twitter({
-			  consumer_key: twitterCK,
-			  consumer_secret: twitterCS,
-			  access_token_key: twitterATK,
-			  access_token_secret: twitterATS
-			});
+			twitterClient.get('statuses/user_timeline', function(error, tweets, response) {
 
-			client.get('statuses/user_timeline', function(error, tweets, response) {
-
-  				if(error) throw error;
+  				if (error) {
+  					return console.log('Error occurred: ' + error);
+  				}
 
   				// Find amount of tweets in timeline
   				var twitterLength = tweets.length;
@@ -60,10 +66,32 @@
 	// Spotify Function
 	// =====================================================================================
 
-		var spotifyThisSong = function() {
+		var spotifyThisSong = function(songTitle) {
 
+			if (songTitle === undefined) {
+				songTitle = "The Sign";
+			}
+ 
+			spotifyClient.search({ type: 'track', query: songTitle, limit: 10 }, function(error, data) {
+					if (error) {
+						return console.log('Error occurred: ' + error);
+					} else {
+						console.log(" ");
+						console.log("********** Here are your top 10 results for " + songTitle + " **********");
+						for (var i = 0; i<10; i++) {
+			  				console.log(" ");
+			  				console.log("Result " + (parseInt(i)+1) + ":");
+			  				console.log(" ");
+			  				console.log("Artist Name: " + data.tracks.items[i].artists[0].name);
+			  				console.log("Song Name: " + data.tracks.items[i].name);
+			  				console.log("Song Preview Link: " + data.tracks.items[i].external_urls.spotify);
+			  				console.log("Album: " + data.tracks.items[i].album.name);
+			  				console.log(" ");		
+			  				console.log("--------------------------------------------------------------");	
+						}
+					}	
+			});
 		};
-
 
 	// OMDB Function
 	// =====================================================================================
@@ -114,3 +142,38 @@
 		    default:
 		    	console.log("No command was entered.");
 		}
+
+
+// This will show the following information about the song in your terminal/bash window
+// Artist(s)
+// The song's name
+// A preview link of the song from Spotify
+// The album that the song is from
+// If no song is provided then your program will default to "The Sign" by Ace of Base.
+
+// [ { album: 
+//      { album_type: 'album',
+//        artists: [Array],
+//        available_markets: [Array],
+//        external_urls: [Object],
+//        href: 'https://api.spotify.com/v1/albums/5qt11cWjSs5Gbqj2Wyfu38',
+//        id: '5qt11cWjSs5Gbqj2Wyfu38',
+//        images: [Array],
+//        name: 'Enema Of The State',
+//        type: 'album',
+//        uri: 'spotify:album:5qt11cWjSs5Gbqj2Wyfu38' },
+//     artists: [ [Object] ],
+//     available_markets: [ 'CA', 'MX', 'US' ],
+//     disc_number: 1,
+//     duration_ms: 168000,
+//     explicit: false,
+//     external_ids: { isrc: 'USMC19959123' },
+//     external_urls: { spotify: 'https://open.spotify.com/track/7yCPwWs66K8Ba5lFuU2bcx' },
+//     href: 'https://api.spotify.com/v1/tracks/7yCPwWs66K8Ba5lFuU2bcx',
+//     id: '7yCPwWs66K8Ba5lFuU2bcx',
+//     name: 'All The Small Things',
+//     popularity: 74,
+//     preview_url: null,
+//     track_number: 8,
+//     type: 'track',
+//     uri: 'spotify:track:7yCPwWs66K8Ba5lFuU2bcx' } ]
