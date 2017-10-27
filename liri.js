@@ -8,6 +8,7 @@
 		var Twitter = require('twitter');
 		var Spotify = require('node-spotify-api');
 		var fs = require('fs');
+		var moment = require('moment');
 
 		// API keys file 
 		var keys = require("./keys.js");
@@ -35,6 +36,8 @@
 
 		var myTweets = function() {
 
+			var tweetTime;
+
 			twitterClient.get('statuses/user_timeline', function(error, tweets, response) {
 
   				if (error) {
@@ -57,7 +60,9 @@
   					console.log(" ");
 			  		console.log("Tweet " + (parseInt(i)+1) + ":");  		
 	  				console.log(" ");
-	  				console.log("Tweeted at: " + currentTweet.created_at);
+	  				// Reformat date & time
+	  				tweetTime = moment(currentTweet.created_at, "ddd MMM D HH:mm:ss ZZ YYYY");
+	  				console.log("Tweeted at: " + tweetTime.format("dddd, MMMM Do YYYY, h:mm:ss A"));
 	  				console.log(" ");
 	  				console.log("Tweet: " + currentTweet.text);
 	  				console.log(" ");		
