@@ -156,6 +156,7 @@
 					var contents = data.split(',');
 					liriCommand = contents[0];
 					liriSearchTerm = contents[1];
+					switchStatements();
 				}
 
 			});
@@ -164,23 +165,28 @@
 	// Liri Commands  
 	// =====================================================================================
 
-		switch(liriCommand) {
-		    case 'my-tweets':
-		    	myTweets();
-		        break;
-		    case 'spotify-this-song':
-		    	spotifyThisSong(liriSearchTerm);
-		        break;
-		    case 'movie-this':
-		    	movieThis(liriSearchTerm);
-		    	break;
-		    case 'do-what-it-says':
-		    	doWhatItSays();
-		    	break;
-		    default:
-		    	console.log("No command was entered.");
+		var switchStatements = function() {
+			switch(liriCommand) {
+			    case 'my-tweets':
+			    	myTweets();
+			        break;
+			    case 'spotify-this-song':
+			    	spotifyThisSong(liriSearchTerm);
+			        break;
+			    case 'movie-this':
+			    	movieThis(liriSearchTerm);
+			    	break;
+			    case 'do-what-it-says':
+			    	doWhatItSays();
+			    	break;
+			    default:
+			    	console.log("No command was entered.");
+			}
 		}
 
+	// Start up Function
+	// =====================================================================================
+	switchStatements();
 
 // This will show the following information about the song in your terminal/bash window
 // Artist(s)
