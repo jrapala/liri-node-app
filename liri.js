@@ -50,10 +50,15 @@
   				}
 
   				// Log tweet data and tweet
+  				console.log(" ");
+				console.log("********** Here are your latest tweets **********");
   				for (var i = 0; i<twitterLength; i++) {
-  					var currentTweet = tweets[i];  		
+  					var currentTweet = tweets[i];
+  					console.log(" ");
+			  		console.log("Tweet " + (parseInt(i)+1) + ":");  		
 	  				console.log(" ");
 	  				console.log("Tweeted at: " + currentTweet.created_at);
+	  				console.log(" ");
 	  				console.log("Tweet: " + currentTweet.text);
 	  				console.log(" ");		
 	  				console.log("--------------------------------------------------------------");	
@@ -68,30 +73,58 @@
 
 		var spotifyThisSong = function(songTitle) {
 
+			// If user did not enter a song, return results for Ace of Base's "The Sign"
 			if (songTitle === undefined) {
-				songTitle = "The Sign";
-			}
- 
-			spotifyClient.search({ type: 'track', query: songTitle, limit: 10 }, function(error, data) {
+				spotifyClient.search({ type: 'track', query: 'The Sign', limit: 10 }, function(error, data) {
+					// Error messaging 
 					if (error) {
 						return console.log('Error occurred: ' + error);
 					} else {
+		  				console.log("--------------------------------------------------------------");	
 						console.log(" ");
-						console.log("********** Here are your top 10 results for " + songTitle + " **********");
-						for (var i = 0; i<10; i++) {
-			  				console.log(" ");
-			  				console.log("Result " + (parseInt(i)+1) + ":");
-			  				console.log(" ");
-			  				console.log("Artist Name: " + data.tracks.items[i].artists[0].name);
-			  				console.log("Song Name: " + data.tracks.items[i].name);
-			  				console.log("Song Preview Link: " + data.tracks.items[i].external_urls.spotify);
-			  				console.log("Album: " + data.tracks.items[i].album.name);
-			  				console.log(" ");		
-			  				console.log("--------------------------------------------------------------");	
-						}
-					}	
-			});
-		};
+						console.log('********** Hmm...looks like you did not enter a song title, so here is a Spotify search result for "The Sign" by Ace of Base **********');
+		  				console.log(" ");
+		  				console.log("Artist Name: " + data.tracks.items[8].artists[0].name);
+		  				console.log("Song Name: " + data.tracks.items[8].name);
+		  				console.log("Song Preview Link: " + data.tracks.items[8].external_urls.spotify);
+		  				console.log("Album: " + data.tracks.items[8].album.name);
+		  				console.log(" ");		
+		  				console.log("--------------------------------------------------------------");	
+					}
+				});
+			} else {
+ 
+				spotifyClient.search({ type: 'track', query: songTitle, limit: 10 }, function(error, data) {
+						// Error messaging 
+						if (error) {
+							return console.log('Error occurred: ' + error);
+						} else {
+							// Find the length of the response (may be smaller than 10)
+							var numSearchResults = data.tracks.items.length;
+							// If no results found..
+							if (numSearchResults === 0) {
+								console.log("Sorry, no results found.");
+							// If results found..
+							} else {
+			  					console.log("--------------------------------------------------------------");	
+								console.log(" ");
+								console.log("********** Here are your top " + numSearchResults + " Spotify results for \"" + songTitle + "\" **********");
+								for (var i = 0; i<numSearchResults; i++) {
+					  				console.log(" ");
+					  				console.log("Result " + (parseInt(i)+1) + ":");
+					  				console.log(" ");
+					  				console.log("Artist Name: " + data.tracks.items[i].artists[0].name);
+					  				console.log("Song Name: " + data.tracks.items[i].name);
+					  				console.log("Song Preview Link: " + data.tracks.items[i].external_urls.spotify);
+					  				console.log("Album: " + data.tracks.items[i].album.name);
+					  				console.log(" ");		
+					  				console.log("--------------------------------------------------------------");	
+								}
+							}	
+						};
+				});
+			}
+		}
 
 	// OMDB Function
 	// =====================================================================================
