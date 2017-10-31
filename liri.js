@@ -9,6 +9,8 @@
 		var Spotify = require('node-spotify-api');
 		var fs = require('fs');
 		var moment = require('moment');
+		var request = require('request');
+		const chalk = require('chalk');
 
 		// API keys file 
 		var keys = require("./keys.js");
@@ -140,37 +142,52 @@
 	// OMDB Function
 	// =====================================================================================
 
-		var movieThis = function() {
+		var movieThis = function(movieTitle) {
 
-			request("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+			// Declare variables
+			var releaseDate;
+			var formattedReleaseDate;
+
+			if (movieTitle === undefined) {
+   				movieTitle = "Mr. Nobody";		
+				console.log('\nHmm...looks like you did not enter a movie title. I will look for "Mr. Nobody" instead..');		
+  			}
+
+			request("http://www.omdbapi.com/?t=" + movieTitle + "&apikey=40e9cece", function(error, response, body) {
 
 				// Log any errors
 				if (error) {
 					console.log(error);
-				}
-  				
+  				} else if (JSON.parse(body).Title === undefined) {
+  					console.log("\nSorry, \"" + movieTitle + "\" was not found in the OMDB.\n");
   				// If the request is successful (i.e. if the response status code is 200)
-  				else if (!error && response.statusCode === 200) {
-
-	    			// Parse the body of the site and recover just the imdbRating
-	    			// (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-	    			console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+  				} else if (!error && response.statusCode === 200) {
+	    			console.log("\n----------------------------------------------------------------------------------------");
+					console.log("************** Here are your OMDB search results for \"" + movieTitle + "\" **************");
+					console.log("----------------------------------------------------------------------------------------\n");		
+					console.log(chalk.underline("Title of the movie") + ": " + JSON.parse(body).Title);
+					// Reformat date & time
+	  				releaseDate = moment(JSON.parse(body).Released, "DD MMM YYYY");
+	  				formattedReleaseDate = releaseDate.format("MMMM DD, YYYY");
+				  	console.log(chalk.underline("Date the movie came out") + ": " + formattedReleaseDate);
+				  	console.log(chalk.underline("IMDB rating of the movie") + ": " + JSON.parse(body).imdbRating);
+				  	// Find Rotten Tomatoes Rating
+				  	for (var i = 0; i<JSON.parse(body).Ratings.length; i++) {
+				  		if (JSON.parse(body).Ratings[i].Source === "Rotten Tomatoes") {
+				  			console.log(chalk.underline("Rotten Tomatoes rating of the movie") + ": " + JSON.parse(body).Ratings[i].Value);
+				  		}
+				  	}
+				  	console.log(chalk.underline("Country where the movie was produced") + ": " + JSON.parse(body).Country);
+				  	console.log(chalk.underline("Language(s) of the movie") + ": " + JSON.parse(body).Language);
+				  	console.log(chalk.underline("Plot of the movie") + ": " + JSON.parse(body).Plot);
+				  	console.log(chalk.underline("Actors in the movie") + ": " + JSON.parse(body).Actors + "\n");
+  				
   				} else {
-  					console.log("Something went wrong. Please try again");
+  					console.log("Something went wrong. Please try again.");
   				}
 			});
 
 		};
-
-
-	// * Title of the movie.
-  	// * Year the movie came out.
-  	// * IMDB Rating of the movie.
-  	// * Rotten Tomatoes Rating of the movie.
-  	// * Country where the movie was produced.
-  	// * Language of the movie.
-  	// * Plot of the movie.
-  	// * Actors in the movie.
 
 	// "Do What It Says" Function
 	// =====================================================================================
@@ -187,9 +204,16 @@
 
 				// If no error..
 				else {
+					// Get commands in file
 					var contents = data.split(',');
 					liriCommand = contents[0];
 					liriSearchTerm = contents[1];
+					// If it exists, remove first and last characters from the second command (double quotation marks).
+					if (liriSearchTerm != undefined) {
+						liriSearchTerm = liriSearchTerm.substr(1);
+						liriSearchTerm = liriSearchTerm.slice(0,-1);
+					}
+					// Pass in commands
 					switchStatements();
 				}
 
@@ -211,7 +235,7 @@
 			    	movieThis(liriSearchTerm);
 			    	break;
 			    case 'do-what-it-says':
-			    	doWhatItSays();
+			    	doWhatItSays(liriSearchTerm);
 			    	break;
 			    default:
 			    	welcome();
