@@ -60,17 +60,17 @@
   				}
 
   				// Log tweet data
-  				console.log("\n---------------------------------------------------------");
-				console.log("************** Here are your latest tweets **************");
-				console.log("---------------------------------------------------------\n");
+  				printer("\n---------------------------------------------------------");
+				printer("************** Here are your latest tweets **************");
+				printer("---------------------------------------------------------\n");
   				for (var i = 0; i<twitterLength; i++) {
   					currentTweet = tweets[i];
-			  		console.log("Tweet " + (parseInt(i)+1) + ":");  		
+			  		printer("Tweet " + (parseInt(i)+1) + ":");  		
 	  				// Reformat date & time
 	  				tweetTime = moment(currentTweet.created_at, "ddd MMM D HH:mm:ss ZZ YYYY");
-	  				console.log(chalk.underline("\nTweeted at") + ": " + tweetTime.format("dddd, MMMM Do YYYY, h:mm:ss A"));
-	  				console.log(chalk.underline("\nTweet") + ": " + currentTweet.text);	
-	  				console.log("\n--------------------------------------------------------------\n");	
+	  				printer(chalk.underline("\nTweeted at") + ": " + tweetTime.format("dddd, MMMM Do YYYY, h:mm:ss A"));
+	  				printer(chalk.underline("\nTweet") + ": " + currentTweet.text);	
+	  				printer("\n--------------------------------------------------------------\n");	
   				}
 			});
 		};
@@ -95,13 +95,13 @@
 					
 					// Log "The Sign" data
 					} else {
-		  				console.log("\n--------------------------------------------------------------\n");	
-						console.log('Hmm...looks like you did not enter a song title, so here is a Spotify search result for "The Sign" by Ace of Base:\n');
-		  				console.log(chalk.underline("Artist Name") + ": " + data.tracks.items[8].artists[0].name);
-		  				console.log(chalk.underline("Song Name") + ": " + data.tracks.items[8].name);
-		  				console.log(chalk.underline("Song Preview Link") + ": " + data.tracks.items[8].external_urls.spotify);
-		  				console.log(chalk.underline("Album") + ": " + data.tracks.items[8].album.name);		
-		  				console.log("\n--------------------------------------------------------------");	
+		  				printer("\n--------------------------------------------------------------\n");	
+						printer('Hmm...looks like you did not enter a song title, so here is a Spotify search result for "The Sign" by Ace of Base:\n');
+		  				printer(chalk.underline("Artist Name") + ": " + data.tracks.items[8].artists[0].name);
+		  				printer(chalk.underline("Song Name") + ": " + data.tracks.items[8].name);
+		  				printer(chalk.underline("Song Preview Link") + ": " + data.tracks.items[8].external_urls.spotify);
+		  				printer(chalk.underline("Album") + ": " + data.tracks.items[8].album.name);		
+		  				printer("\n--------------------------------------------------------------");	
 					}
 				});
 
@@ -119,19 +119,19 @@
 							numSearchResults = data.tracks.items.length;
 							// If no results found..
 							if (numSearchResults === 0) {
-								console.log("\nSorry, no Spotify results found for \"" + songTitle + "\".\n");
+								printer("\nSorry, no Spotify results found for \"" + songTitle + "\".\n");
 							// If results found..
 							} else {
-								console.log("\n-------------------------------------------------------------------------------------------");
-								console.log("************** Here are your top " + numSearchResults + " Spotify results for \"" + songTitle + "\" **************");
-								console.log("-------------------------------------------------------------------------------------------\n");
+								printer("\n-------------------------------------------------------------------------------------------");
+								printer("************** Here are your top " + numSearchResults + " Spotify results for \"" + songTitle + "\" **************");
+								printer("-------------------------------------------------------------------------------------------\n");
 			  					for (var i = 0; i<numSearchResults; i++) {
-					  				console.log("Result " + (parseInt(i)+1) + ":");
-					  				console.log(chalk.underline("\nArtist Name") + ": " + data.tracks.items[i].artists[0].name);
-					  				console.log(chalk.underline("Song Name") + ": " + data.tracks.items[i].name);
-					  				console.log(chalk.underline("Song Preview Link") + ": " + data.tracks.items[i].external_urls.spotify);
-					  				console.log(chalk.underline("Album") + ": " + data.tracks.items[i].album.name);	
-					  				console.log("\n--------------------------------------------------------------\n");	
+					  				printer("Result " + (parseInt(i)+1) + ":");
+					  				printer(chalk.underline("\nArtist Name") + ": " + data.tracks.items[i].artists[0].name);
+					  				printer(chalk.underline("Song Name") + ": " + data.tracks.items[i].name);
+					  				printer(chalk.underline("Song Preview Link") + ": " + data.tracks.items[i].external_urls.spotify);
+					  				printer(chalk.underline("Album") + ": " + data.tracks.items[i].album.name);	
+					  				printer("\n--------------------------------------------------------------\n");	
 								}
 							}	
 						};
@@ -150,7 +150,7 @@
 
 			if (movieTitle === undefined) {
    				movieTitle = "Mr. Nobody";		
-				console.log('\nHmm...looks like you did not enter a movie title. I will look for "Mr. Nobody" instead..');		
+				printer('\nHmm...looks like you did not enter a movie title. I will look for "Mr. Nobody" instead..');		
   			}
 
 			request("http://www.omdbapi.com/?t=" + movieTitle + "&apikey=40e9cece", function(error, response, body) {
@@ -159,31 +159,31 @@
 				if (error) {
 					console.log(error);
   				} else if (JSON.parse(body).Title === undefined) {
-  					console.log("\nSorry, \"" + movieTitle + "\" was not found in the OMDB.\n");
+  					printer("\nSorry, \"" + movieTitle + "\" was not found in the OMDB.\n");
   				// If the request is successful (i.e. if the response status code is 200)
   				} else if (!error && response.statusCode === 200) {
-	    			console.log("\n----------------------------------------------------------------------------------------");
-					console.log("************** Here are your OMDB search results for \"" + movieTitle + "\" **************");
-					console.log("----------------------------------------------------------------------------------------\n");		
-					console.log(chalk.underline("Title of the movie") + ": " + JSON.parse(body).Title);
+	    			printer("\n----------------------------------------------------------------------------------------");
+					printer("************** Here are your OMDB search results for \"" + movieTitle + "\" **************");
+					printer("----------------------------------------------------------------------------------------\n");		
+					printer(chalk.underline("Title of the movie") + ": " + JSON.parse(body).Title);
 					// Reformat date & time
 	  				releaseDate = moment(JSON.parse(body).Released, "DD MMM YYYY");
 	  				formattedReleaseDate = releaseDate.format("MMMM DD, YYYY");
-				  	console.log(chalk.underline("Date the movie came out") + ": " + formattedReleaseDate);
-				  	console.log(chalk.underline("IMDB rating of the movie") + ": " + JSON.parse(body).imdbRating);
+				  	printer(chalk.underline("Date the movie came out") + ": " + formattedReleaseDate);
+				  	printer(chalk.underline("IMDB rating of the movie") + ": " + JSON.parse(body).imdbRating);
 				  	// Find Rotten Tomatoes Rating
 				  	for (var i = 0; i<JSON.parse(body).Ratings.length; i++) {
 				  		if (JSON.parse(body).Ratings[i].Source === "Rotten Tomatoes") {
-				  			console.log(chalk.underline("Rotten Tomatoes rating of the movie") + ": " + JSON.parse(body).Ratings[i].Value);
+				  			printer(chalk.underline("Rotten Tomatoes rating of the movie") + ": " + JSON.parse(body).Ratings[i].Value);
 				  		}
 				  	}
-				  	console.log(chalk.underline("Country where the movie was produced") + ": " + JSON.parse(body).Country);
-				  	console.log(chalk.underline("Language(s) of the movie") + ": " + JSON.parse(body).Language);
-				  	console.log(chalk.underline("Plot of the movie") + ": " + JSON.parse(body).Plot);
-				  	console.log(chalk.underline("Actors in the movie") + ": " + JSON.parse(body).Actors + "\n");
+				  	printer(chalk.underline("Country where the movie was produced") + ": " + JSON.parse(body).Country);
+				  	printer(chalk.underline("Language(s) of the movie") + ": " + JSON.parse(body).Language);
+				  	printer(chalk.underline("Plot of the movie") + ": " + JSON.parse(body).Plot);
+				  	printer(chalk.underline("Actors in the movie") + ": " + JSON.parse(body).Actors + "\n");
   				
   				} else {
-  					console.log("Something went wrong. Please try again.");
+  					printer("Something went wrong. Please try again.");
   				}
 			});
 
@@ -226,15 +226,19 @@
 		var switchStatements = function() {
 			switch(liriCommand) {
 			    case 'my-tweets':
+			    	logCommand(liriCommand);
 			    	myTweets();
 			        break;
 			    case 'spotify-this-song':
+			    	logCommand(liriCommand, liriSearchTerm);
 			    	spotifyThisSong(liriSearchTerm);
 			        break;
 			    case 'movie-this':
+			    	logCommand(liriCommand, liriSearchTerm);
 			    	movieThis(liriSearchTerm);
 			    	break;
 			    case 'do-what-it-says':
+			    	logCommand(liriCommand);
 			    	doWhatItSays(liriSearchTerm);
 			    	break;
 			    default:
@@ -257,6 +261,42 @@
 			console.log("\t$ node liri.js movie-this \"<title of movie>\"\n");		
 			console.log("\t4) To run a command listed in the 'random.txt' file, please enter:")
 			console.log("\t$ node liri.js do-what-it-says\n");		
+		}
+
+	// Logging
+	// =====================================================================================
+	
+		// Log Liri Command
+		var logCommand = function(action, parameter) {
+			fs.appendFile('log.txt', "Liri Command: " + action, function (err) {
+	  			if (err) throw err;
+			});					
+
+			if (parameter != undefined) {
+				fs.appendFile('log.txt', ' "' + parameter + '"\n', function (err) {
+  					if (err) throw err;
+				});			
+			} else {
+				fs.appendFile('log.txt', "\n", function (err) {
+  					if (err) throw err;
+				});		
+			}
+		}
+
+		// Log Liri Output
+		var logData = function(item) {
+			fs.appendFile('log.txt', item + "\n", function (err) {
+  				if (err) throw err;
+			});			
+		};
+
+		var printer = function(content) {
+			// Show in console
+			console.log(content);
+			// RegEx to remove Chalk 
+			var newStr = content.replace(/(\[4m)|(\[24m)/g,'');
+			// Add to log.txt
+			logData(newStr);
 		}
 
 	// Start App
