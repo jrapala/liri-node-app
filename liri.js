@@ -68,8 +68,8 @@
 			  		console.log("Tweet " + (parseInt(i)+1) + ":");  		
 	  				// Reformat date & time
 	  				tweetTime = moment(currentTweet.created_at, "ddd MMM D HH:mm:ss ZZ YYYY");
-	  				console.log("\nTweeted at: " + tweetTime.format("dddd, MMMM Do YYYY, h:mm:ss A"));
-	  				console.log("\nTweet: " + currentTweet.text);	
+	  				console.log(chalk.underline("\nTweeted at") + ": " + tweetTime.format("dddd, MMMM Do YYYY, h:mm:ss A"));
+	  				console.log(chalk.underline("\nTweet") + ": " + currentTweet.text);	
 	  				console.log("\n--------------------------------------------------------------\n");	
   				}
 			});
@@ -97,10 +97,10 @@
 					} else {
 		  				console.log("\n--------------------------------------------------------------\n");	
 						console.log('Hmm...looks like you did not enter a song title, so here is a Spotify search result for "The Sign" by Ace of Base:\n');
-		  				console.log("Artist Name: " + data.tracks.items[8].artists[0].name);
-		  				console.log("Song Name: " + data.tracks.items[8].name);
-		  				console.log("Song Preview Link: " + data.tracks.items[8].external_urls.spotify);
-		  				console.log("Album: " + data.tracks.items[8].album.name);		
+		  				console.log(chalk.underline("Artist Name") + ": " + data.tracks.items[8].artists[0].name);
+		  				console.log(chalk.underline("Song Name") + ": " + data.tracks.items[8].name);
+		  				console.log(chalk.underline("Song Preview Link") + ": " + data.tracks.items[8].external_urls.spotify);
+		  				console.log(chalk.underline("Album") + ": " + data.tracks.items[8].album.name);		
 		  				console.log("\n--------------------------------------------------------------");	
 					}
 				});
@@ -127,10 +127,10 @@
 								console.log("-------------------------------------------------------------------------------------------\n");
 			  					for (var i = 0; i<numSearchResults; i++) {
 					  				console.log("Result " + (parseInt(i)+1) + ":");
-					  				console.log("\nArtist Name: " + data.tracks.items[i].artists[0].name);
-					  				console.log("Song Name: " + data.tracks.items[i].name);
-					  				console.log("Song Preview Link: " + data.tracks.items[i].external_urls.spotify);
-					  				console.log("Album: " + data.tracks.items[i].album.name);	
+					  				console.log(chalk.underline("\nArtist Name") + ": " + data.tracks.items[i].artists[0].name);
+					  				console.log(chalk.underline("Song Name") + ": " + data.tracks.items[i].name);
+					  				console.log(chalk.underline("Song Preview Link") + ": " + data.tracks.items[i].external_urls.spotify);
+					  				console.log(chalk.underline("Album") + ": " + data.tracks.items[i].album.name);	
 					  				console.log("\n--------------------------------------------------------------\n");	
 								}
 							}	
